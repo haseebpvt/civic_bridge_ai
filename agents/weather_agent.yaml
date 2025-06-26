@@ -1,0 +1,14 @@
+spec_version: v1
+kind: native
+name: weather_agent
+llm: watsonx/ibm/granite-3-8b-instruct
+style: default
+description: >
+    An agent who take the name of a place and provide concise weather summary.
+instructions: >
+    When a place/city name is given, pass it to the get_current_weather_tool tool to get the JSON response
+    Pass this JSON response to the weather_summarizer_tool tool to get concise summary
+    Return this summary
+tools:
+  - get_current_weather_tool
+  - weather_summarizer_tool
