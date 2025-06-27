@@ -22,36 +22,49 @@ def get_weather_forcast(city: str):
     res = conn.getresponse()
     data = res.read()
     
-    # Parse the full response
-    full_forecast = json.loads(data.decode("utf-8"))
-    
-    # Filter to only essential fields for outdoor work scheduling
-    filtered_forecast = {
-        "city": {
-            "name": full_forecast.get("city", {}).get("name"),
-            "coord": full_forecast.get("city", {}).get("coord")
-        },
-        "list": []
-    }
-    
-    # Filter each forecast entry to only rain-relevant data
-    for entry in full_forecast.get("list", []):
-        filtered_entry = {
-            "dt": entry.get("dt"),
-            "dt_txt": entry.get("dt_txt"),
-            "pop": entry.get("pop"),  # probability of precipitation (0-1)
-            "weather": [
-                {
-                    "main": entry.get("weather", [{}])[0].get("main"),
-                    "description": entry.get("weather", [{}])[0].get("description")
-                }
-            ]
+    try:
+        # Parse the full response
+        full_forecast = json.loads(data.decode("utf-8"))
+        
+        # Check if the API returned an error
+        if "cod" in full_forecast and str(full_forecast["cod"]) != "200":
+            return json.dumps({"error": f"Weather API error: {full_forecast.get('message', 'Unknown error')}"})
+        
+        # Filter to only essential fields for outdoor work scheduling
+        filtered_forecast = {
+            "city": {
+                "name": full_forecast.get("city", {}).get("name"),
+                "coord": full_forecast.get("city", {}).get("coord")
+            },
+            "list": []
         }
         
-        # Only include rain data if it exists
-        if "rain" in entry:
-            filtered_entry["rain"] = entry["rain"]
+        # Filter each forecast entry to only rain-relevant data
+        for entry in full_forecast.get("list", []):
+            # Handle missing weather data gracefully
+            weather_data = entry.get("weather", [{}])[0] if entry.get("weather") else {}
             
-        filtered_forecast["list"].append(filtered_entry)
-    
-    return json.dumps(filtered_forecast)
+            filtered_entry = {
+                "dt": entry.get("dt"),
+                "dt_txt": entry.get("dt_txt"),
+                "pop": entry.get("pop", 0),  # probability of precipitation (0-1)
+                "weather": [
+                    {
+                        "main": weather_data.get("main", "Unknown"),
+                        "description": weather_data.get("description", "No description")
+                    }
+                ]
+            }
+            
+            # Only include rain data if it exists
+            if "rain" in entry:
+                filtered_entry["rain"] = entry["rain"]
+                
+            filtered_forecast["list"].append(filtered_entry)
+        
+        return json.dumps(filtered_forecast)
+        
+    except json.JSONDecodeError as e:
+        return json.dumps({"error": f"Failed to parse weather data: {str(e)}"})
+    except Exception as e:
+        return json.dumps({"error": f"Weather tool error: {str(e)}"})
