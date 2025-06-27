@@ -1,0 +1,14 @@
+spec_version: v1
+kind: native
+name: work_order_agent
+llm: watsonx/ibm/granite-3-8b-instruct
+style: default
+description: >
+  An agent that create work order based on the weather suggestions available.
+instructions: >
+  Use the prompt and weather information acquired from the weather_agent to create a work order.
+  Show the work order created by work_order_creation_tool as it is.
+collaborators:
+  - weather_agent
+tools:
+  - work_order_creation_tool
