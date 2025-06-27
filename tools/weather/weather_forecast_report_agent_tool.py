@@ -1,42 +1,35 @@
 import json
-from typing import Any
+from typing import Union, Dict, Any
 
 from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 
 
 @tool(
     name="generate_weather_forecast_report_tool",
-    description="Generate weather forcast report per day.",
+    description="Generate a human-readable multi-day weather forecast report.",
     permission=ToolPermission.READ_ONLY,
 )
-def generate_weather_forecast_report_tool(weather_forcast_json: Any):
-    '''
-    Generate weather forcast report for each day.
+def generate_weather_forecast_report_tool(
+        forecast_data: Union[str, Dict[str, Any]]
+) -> str:
+    """
+    :param forecast_data: Either a JSON string or a Python dict containing the full forecast JSON.
+    :return: A newline-separated, human-readable per-day report.
+    """
+    # if we got a string, parse it; otherwise assume it's already a dict
+    if isinstance(forecast_data, str):
+        data = json.loads(forecast_data)
+    else:
+        data = forecast_data
 
-    :param weather_forcast_json: Input json containing weather report of the day
-    :return: String containing human-readable report of weather
-    '''
+    # extract the list of time slots
+    entries = data.get("list", [])
+    report_lines = []
+    for item in entries:
+        dt = item.get("dt_txt", "<unknown time>")
+        weather = item.get("weather", [{}])[0]
+        main = weather.get("main", "Unknown")
+        desc = weather.get("description", "")
+        report_lines.append(f"{dt} – {main}, {desc}")
 
-    json_data = json.loads(weather_forcast_json)
-
-    result = _extract_weather_info(json_data["list"])
-
-    return "\n".join(result)
-
-
-def _extract_weather_info(list_data):
-    result = []
-
-    for item in list_data:
-        try:
-            date = item["dt_txt"]
-            weather_object = item["weather"][0]
-            weather = f'{weather_object["main"]}, {weather_object["description"]}'
-
-            text = f"{date} - {weather}"
-
-            result.append(text)
-        except Exception as e:
-            print(e)
-
-    return result
+    return "\n".join(report_lines)
