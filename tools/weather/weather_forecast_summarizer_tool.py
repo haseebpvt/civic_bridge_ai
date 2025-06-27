@@ -7,10 +7,10 @@ from langchain_ibm import WatsonxLLM
 
 @tool(
     name="weather_forecast_summarizer_tool",
-    description="Given filtered weather forecast JSON, returns human-readable rain/weather summary",
+    description="Given weather forecast JSON, returns human-readable list",
     permission=ToolPermission.READ_ONLY,
 )
-def summarize_forecast_tool(data: str):
+def weather_forecast_summarizer_tool(data: str):
     prompt = f'''
         Parse the following JSON weather forecast data and return ONLY a simple timeline of weather entries.
 
