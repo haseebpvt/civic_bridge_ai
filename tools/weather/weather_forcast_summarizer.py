@@ -1,23 +1,22 @@
 import datetime
 import json
-
+from typing import Any
 from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 
 
 @tool(
     name="weather_forcast_summarizer_tool",
-    description="Given the weather forcast JSON (as string or dict), returns the human readable summary of forcast.",
+    description="Given filtered weather forecast JSON for outdoor work scheduling, returns human-readable rain/weather summary for planning purposes.",
     permission=ToolPermission.READ_ONLY,
 )
-def summarize_forecast_tool(data):
+def summarize_forecast_tool(data: Any):
     """
-    Takes the full OpenWeatherMap forecast JSON (as string or dict) and returns a list of human-readable strings.
-    Each entry includes:
-      - Day of week
-      - Date and time (12‑hour format)
-      - Weather description
-      - Rain chance category and percentage
-      - Rain volume in mm
+    Takes the filtered OpenWeatherMap forecast JSON (as string or dict) and returns a list of human-readable strings
+    optimized for outdoor work scheduling. Each entry includes:
+      - Day of week and time slot
+      - Weather conditions
+      - Rain probability and risk level
+      - Expected rain volume
     """
     # Parse JSON string if input is a string
     if isinstance(data, str):
