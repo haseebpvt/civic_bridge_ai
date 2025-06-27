@@ -27,4 +27,11 @@ orchestrate tools import \
   -p tools/ \
   -r tools/weather/requirements.txt
 
+
+echo "✅ Done."
+
+echo "Importing Agents"
+
+orchestrate agents import -f agents/weather_agent.yaml
+
 echo "✅ Done."
