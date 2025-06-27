@@ -10,7 +10,7 @@ from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
     permission=ToolPermission.READ_ONLY,
 )
 def generate_weather_forecast_report_tool(
-        forecast_data: Union[str, Dict[str, Any]]
+        forecast_data: Any
 ) -> str:
     """
     :param forecast_data: Either a JSON string or a Python dict containing the full forecast JSON.
