@@ -4,11 +4,11 @@ import json
 from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 
 
-@tool(
-    name="weather_forcast_tool",
-    description="Given the city name, returns the upcoming days weather forcast in JSON format, filtered for outdoor work scheduling (rain data only).",
-    permission=ToolPermission.READ_ONLY,
-)
+# @tool(
+#     name="weather_forcast_tool",
+#     description="Given the city name, returns the upcoming days weather forcast in JSON format, filtered for outdoor work scheduling (rain data only).",
+#     permission=ToolPermission.READ_ONLY,
+# )
 def get_weather_forcast(city: str):
     conn = http.client.HTTPSConnection("api.openweathermap.org")
     payload = ''
@@ -68,3 +68,9 @@ def get_weather_forcast(city: str):
         return json.dumps({"error": f"Failed to parse weather data: {str(e)}"})
     except Exception as e:
         return json.dumps({"error": f"Weather tool error: {str(e)}"})
+
+
+if __name__ == '__main__':
+    result = get_weather_forcast("Kakkanad")
+
+    print(result)
