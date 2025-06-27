@@ -2,13 +2,16 @@ spec_version: v1
 kind: native
 name: weather_agent
 llm: watsonx/ibm/granite-3-8b-instruct
-style: default
+style: react
 description: >
-    An agent who take the name of a place and provide concise weather summary.
+  An agent that takes a place name and provides current weather summaries and multi-day forecasts.
 instructions: >
-    When a place/city name is given, pass it to the get_current_weather_tool tool to get the JSON response
-    Pass this JSON response to the weather_summarizer_tool tool to get concise summary
-    Return this summary
+  Use a ReAct pattern to decide which tools to invoke based on the user's request:
+  - If the user asks for the current weather, call `get_current_weather_tool` and pass its JSON output to `weather_summarizer_tool`.
+  - If the user asks for a multi-day forecast, call `weather_forcast_tool` and then `weather_forcast_summarizer_tool`.
+  After retrieving data with these tools, synthesize a coherent, human-readable response.
 tools:
   - get_current_weather_tool
   - weather_summarizer_tool
+  - weather_forcast_tool
+  - weather_forcast_summarizer_tool
