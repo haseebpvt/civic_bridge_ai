@@ -23,7 +23,7 @@ orchestrate tools import \
 
 orchestrate tools import \
   -k python \
-  -f tools/weather/weather_forcast_summarizer.py \
+  -f tools/weather/weather_forcast_summarizer_tool.py \
   -p tools/ \
   -r tools/weather/requirements.txt
 
