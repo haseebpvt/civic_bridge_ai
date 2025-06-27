@@ -27,7 +27,7 @@ def _get_inference(prompt: str):
     os.environ["WATSONX_APIKEY"] = "ZA9eEpcQJFUqjvtLAAxbuvWmUgTlbyXWqVVmM3Nq3FwD"
 
     llm = WatsonxLLM(
-        model_id="ibm/granite-3-8b-instruct",
+        model_id="ibm/granite-3-3-8b-instruct",
         url="https://us-south.ml.cloud.ibm.com",
         project_id="bb2a1719-9aa6-497c-a167-8389bde3c92e",
         params={GenParams.MAX_NEW_TOKENS: 5000},
