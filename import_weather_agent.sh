@@ -27,12 +27,6 @@ orchestrate tools import \
 #  -p tools/ \
 #  -r tools/weather/requirements.txt
 
-orchestrate tools import \
-  -k python \
-  -f tools/weather/weather_forecast_report_agent_tool.py \
-  -p tools/ \
-  -r tools/weather/requirements.txt
-
 
 echo "✅ Done."
 
