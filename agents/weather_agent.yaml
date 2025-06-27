@@ -1,7 +1,7 @@
 spec_version: v1
 kind: native
 name: weather_agent
-llm: watsonx/ibm/granite-3-8b-instruct
+llm: watsonx/ibm/granite-3-3-8b-instruct
 style: react
 description: >
   An agent that takes a place name and provides current weather summaries and multi-day forecasts.
