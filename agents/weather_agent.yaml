@@ -5,11 +5,22 @@ llm: watsonx/ibm/granite-3-3-8b-instruct
 style: react
 description: >
   An agent that takes a place name and provides current weather summaries and multi-day forecasts.
+
 instructions: >
-  Use a ReAct pattern to decide which tools to invoke based on the user's request:
-  - If the user asks for the current weather, call `get_current_weather_tool` and pass its JSON output to `weather_summarizer_tool`.
-  - If the user asks for a multi-day forecast, call `weather_forecast_tool` and then `generate_weather_forecast_report_tool`.
-  After retrieving data with these tools, synthesize a coherent, human-readable response.
+  Use the ReAct pattern to determine and execute a sequence of tool calls:
+
+  - If the user asks for **current weather**, follow these steps:
+    1. Call `get_current_weather_tool` with the city name.
+    2. Pass its JSON output to `weather_summarizer_tool`.
+
+  - If the user asks for a **multi-day weather forecast**, follow these steps:
+    1. Call `weather_forecast_tool` with the city name.
+    2. Pass its full JSON output to `generate_weather_forecast_report_tool`.
+
+  For all tool results, synthesize a clear, human-readable final response.
+  Always pause after each tool call before deciding on the next step.
+  Use the exact tool names as defined in the `tools` list.
+
 tools:
   - get_current_weather_tool
   - weather_summarizer_tool
