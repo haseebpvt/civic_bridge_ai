@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 
@@ -8,7 +9,7 @@ from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
     description="Generate weather forcast report per day.",
     permission=ToolPermission.READ_ONLY,
 )
-def generate_weather_forecast_report_tool(weather_forcast_json: str):
+def generate_weather_forecast_report_tool(weather_forcast_json: Any):
     '''
     Generate weather forcast report for each day.
 
