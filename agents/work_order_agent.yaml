@@ -6,6 +6,7 @@ style: default
 description: >
   An agent that create work order based on the weather suggestions available.
 instructions: >
+  When a issue is reported, you need to schedule a date and time for fixing that issue.
   Use the prompt and weather information acquired from the weather_agent to create a work order.
   Show the work order created by work_order_creation_tool as it is.
 collaborators:
