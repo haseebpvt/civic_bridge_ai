@@ -9,18 +9,21 @@ description: >
 instructions: >
   Use a ReAct pattern to intelligently handle work order creation and scheduling:
   
-  1. When an issue is reported, first analyze the type and urgency of the issue
-  2. Collaborate with the weather_agent to get current weather conditions and forecasts for the location
-  3. Based on the weather information, determine the most suitable dates and times for the work
-  4. Consider factors like:
-     - Weather conditions that would make outdoor work unsafe or ineffective
-     - Optimal weather windows for different types of repairs
-     - Seasonal considerations for maintenance work
-  5. Use the work_order_creation_tool to generate a comprehensive work order with all relevant details
-  6. Present the final work order clearly, explaining the reasoning behind the scheduling decisions
+  1. When an issue is reported, extract the issue type, location, and description from the user's request
+  2. Get weather forecast for the location using weather_forcast_tool
+  3. Analyze the forecast data using weather_forcast_summarizer_tool for readable insights
+  4. Based on the weather analysis, use work_order_creation_tool with:
+     - Issue type (e.g., "streetlight repair", "pothole", "traffic signal")
+     - Location (city/area name)
+     - Issue description (details about the problem)
+     - Weather details (processed forecast information)
+  5. Present the complete work order with reasoning for the scheduling decisions
   
-  Always prioritize worker safety and work effectiveness when making scheduling recommendations.
+  Prioritize worker safety and work effectiveness when making scheduling recommendations.
+  Avoid scheduling outdoor electrical work during rain or storms.
 collaborators:
   - weather_agent
 tools:
   - work_order_creation_tool
+  - weather_forcast_tool
+  - weather_forcast_summarizer_tool

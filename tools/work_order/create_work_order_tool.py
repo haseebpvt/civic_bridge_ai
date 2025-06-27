@@ -7,27 +7,54 @@ from langchain_ibm import WatsonxLLM
 
 @tool(
     name="work_order_creation_tool",
-    description="Creates a work order with the available date based on weather condition.",
+    description="Creates a comprehensive work order with optimal scheduling based on weather conditions and issue details.",
     permission=ToolPermission.READ_ONLY,
 )
-def create_work_order(weather_details: str):
+def create_work_order(issue_type: str, location: str, issue_description: str = "", weather_details: str = ""):
     prompt = f'''
-    Using the weather suggestion from below, create a work order with issue type, location, date, time range, weather condition on that time range in markdown format.
+    Create a comprehensive work order for the reported issue with optimal scheduling based on weather conditions.
     
-    [WEATHER SUGGESTION]
+    [ISSUE DETAILS]
+    Issue Type: {issue_type}
+    Location: {location}
+    Description: {issue_description}
+    
+    [WEATHER INFORMATION]
     {weather_details}
     
-    [Example]
-    Work Order:
-    Issue Type: Pothole
-    Location: Banglore
-    Description: A pothole is reported in Banglore city area. 
-    Suggested Repair Date: June 30th
-    Suggested Repair Time: 9:00 AM
+    Create a work order in markdown format that includes:
+    - Issue identification and priority level
+    - Optimal repair date and time based on weather
+    - Required materials and crew size
+    - Safety considerations
+    - Expected duration
+    - Weather conditions during scheduled time
+    
+    [Example Format]
+    # Work Order #WO-{location.upper().replace(' ', '')}-001
+    
+    ## Issue Details
+    - **Type**: {issue_type}
+    - **Location**: {location}
+    - **Priority**: [High/Medium/Low based on safety impact]
+    - **Description**: {issue_description}
+    
+    ## Scheduling
+    - **Recommended Date**: [Best weather window]
+    - **Time Window**: [Optimal hours]
+    - **Weather Conditions**: [Expected conditions]
+    
+    ## Resources Required
+    - **Crew Size**: [Number of workers needed]
+    - **Estimated Duration**: [Time to complete]
+    - **Materials**: [List of required materials]
+    
+    ## Safety Notes
+    - [Weather-related safety considerations]
+    - [Equipment requirements]
     '''
 
     result = _get_inference(prompt)
-
     return result
 
 
