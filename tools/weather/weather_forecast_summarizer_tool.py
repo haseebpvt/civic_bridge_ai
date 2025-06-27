@@ -24,19 +24,12 @@ def summarize_forecast_tool(data: str):
 
 
 def _get_inference(prompt: str):
-    # Get API key and project ID from environment variables for security
-    api_key = os.getenv("WATSONX_APIKEY")
-    project_id = os.getenv("WATSONX_PROJECT_ID")
-    
-    if not api_key:
-        raise ValueError("WATSONX_APIKEY environment variable not set")
-    if not project_id:
-        raise ValueError("WATSONX_PROJECT_ID environment variable not set")
+    os.environ["WATSONX_APIKEY"] = "ZA9eEpcQJFUqjvtLAAxbuvWmUgTlbyXWqVVmM3Nq3FwD"
 
     llm = WatsonxLLM(
         model_id="ibm/granite-3-8b-instruct",
         url="https://us-south.ml.cloud.ibm.com",
-        project_id=project_id,
+        project_id="bb2a1719-9aa6-497c-a167-8389bde3c92e",
         params={GenParams.MAX_NEW_TOKENS: 5000},
     )
 
