@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# (optional) point to a specific orchestrate environment
-# orchestrate config set active-environment <YOUR_ENV_ID>
-
 echo "📦 Packaging & importing tools"
 
 orchestrate tools import \
@@ -15,6 +12,18 @@ orchestrate tools import \
 orchestrate tools import \
   -k python \
   -f tools/weather/weather_summarizer_tool.py \
+  -p tools/ \
+  -r tools/weather/requirements.txt
+
+orchestrate tools import \
+  -k python \
+  -f tools/weather/weather_forcast_tool.py \
+  -p tools/ \
+  -r tools/weather/requirements.txt
+
+orchestrate tools import \
+  -k python \
+  -f tools/weather/weather_forcast_summarizer.py \
   -p tools/ \
   -r tools/weather/requirements.txt
 
