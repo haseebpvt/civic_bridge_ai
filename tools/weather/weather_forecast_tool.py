@@ -5,11 +5,11 @@ from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 
 
 @tool(
-    name="weather_forcast_tool",
-    description="Given the city name, returns the upcoming days weather forcast in JSON format, filtered for outdoor work scheduling (rain data only).",
+    name="weather_forecast_tool",
+    description="Given the city name, returns the upcoming days weather forecast in JSON format, filtered for outdoor work scheduling (rain data only).",
     permission=ToolPermission.READ_ONLY,
 )
-def get_weather_forcast(city: str):
+def get_weather_forecast(city: str):
     conn = http.client.HTTPSConnection("api.openweathermap.org")
     payload = ''
     headers = {}
@@ -71,6 +71,6 @@ def get_weather_forcast(city: str):
 
 
 if __name__ == '__main__':
-    result = get_weather_forcast("Kakkanad")
+    result = get_weather_forecast("Kakkanad")
 
     print(result)

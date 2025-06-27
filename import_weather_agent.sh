@@ -17,13 +17,13 @@ orchestrate tools import \
 
 orchestrate tools import \
   -k python \
-  -f tools/weather/weather_forcast_tool.py \
+  -f tools/weather/weather_forecast_tool.py \
   -p tools/ \
   -r tools/weather/requirements.txt
 
 orchestrate tools import \
   -k python \
-  -f tools/weather/weather_forcast_summarizer_tool.py \
+  -f tools/weather/weather_forecast_summarizer_tool.py \
   -p tools/ \
   -r tools/weather/requirements.txt
 

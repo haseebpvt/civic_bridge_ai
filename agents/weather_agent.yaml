@@ -8,10 +8,10 @@ description: >
 instructions: >
   Use a ReAct pattern to decide which tools to invoke based on the user's request:
   - If the user asks for the current weather, call `get_current_weather_tool` and pass its JSON output to `weather_summarizer_tool`.
-  - If the user asks for a multi-day forecast, call `weather_forcast_tool` and then `weather_forcast_summarizer_tool`.
+  - If the user asks for a multi-day forecast, call `weather_forecast_tool` and then `weather_forecast_summarizer_tool`.
   After retrieving data with these tools, synthesize a coherent, human-readable response.
 tools:
   - get_current_weather_tool
   - weather_summarizer_tool
-  - weather_forcast_tool
-  - weather_forcast_summarizer_tool
+  - weather_forecast_tool
+  - weather_forecast_summarizer_tool
