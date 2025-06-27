@@ -20,7 +20,7 @@ def generate_weather_forecast_report_tool(weather_forcast_json: str):
 
     result = _extract_weather_info(json_data["list"])
 
-    pass
+    return "\n".join(result)
 
 
 def _extract_weather_info(list_data):
