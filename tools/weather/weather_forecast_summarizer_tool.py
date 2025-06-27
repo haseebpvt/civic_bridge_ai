@@ -12,10 +12,22 @@ from langchain_ibm import WatsonxLLM
 )
 def summarize_forecast_tool(data: str):
     prompt = f'''
-        Given a JSON weather forecast with a city block and a list of forecast entries, extract the information into a human-readable markdown list. For each forecast entry, display the date and time (dt_txt), weather condition (main and description), probability of precipitation (pop as a percentage), and rainfall volume over 3 hours if available (rain["3h"]). Format the output in markdown as a bullet list, grouped by date, with each time entry indented under its respective date.
+        Parse the following JSON weather forecast data and return ONLY a simple timeline of weather entries.
 
-        [JSON DATA]
+        JSON data to parse:
         {data}
+
+        Return ONLY the timeline entries in this exact format (one entry per line):
+        Date Time: Weather description (pop% chance of rain) - Rainfall: Xmm over 3h
+
+        Do not include:
+        - Any JSON data
+        - Any labels like [OUTPUT] or [JSON DATA]  
+        - Any explanations or additional text
+        - Any markdown formatting
+        - Any code examples
+
+        Return only the plain text timeline entries, nothing else.
         '''
 
     result = _get_inference(prompt=prompt)
