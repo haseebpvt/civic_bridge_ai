@@ -1,0 +1,4 @@
+langchain-ibm==0.3.12
+ibm-watsonx-orchestrate==1.5.1
+ibm_watson_machine_learning==1.0.368
+pydantic>=2.0.0
