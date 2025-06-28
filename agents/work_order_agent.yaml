@@ -24,4 +24,5 @@ instructions: >
 collaborators:
   - weather_agent
 tools:
+  - extract_details_from_issue_tool
   - work_order_creation_tool
