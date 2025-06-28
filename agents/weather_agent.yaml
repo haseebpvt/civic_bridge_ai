@@ -2,7 +2,7 @@ spec_version: v1
 kind: native
 name: weather_agent
 llm: watsonx/ibm/granite-3-3-8b-instruct
-style: default
+style: react
 description: >
   An agent that takes the location from the users query and pass it to 'weather_forecast_tool'
   to get the forcast of upcoming five days.
@@ -11,9 +11,9 @@ description: >
 #  multi-day forecasts.
 
 instructions: >
-  When a query is received, pass the location from the query to 'weather_forecast_tool'
-  to get the upcoming five days weather forecast. The final response will be five bullet points representing
-  next five days each describing the weather of that particular day.
+  When a query is received, call `weather_forecast_tool` with the provided `location` to fetch a five-day forecast, then **PAUSE**. After receiving the forecast, synthesise and return **exactly five bullet points**, one for each upcoming day, describing the weather conditions in concise language.
+
+   ALWAYS use the ReAct pattern and **PAUSE** immediately after the `weather_forecast_tool` call before crafting the summary.
 
 #  Use the ReAct pattern to determine and execute a sequence of tool calls.
 #  ALWAYS pause after each tool call before deciding on the next step.
