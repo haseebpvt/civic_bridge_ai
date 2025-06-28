@@ -1,6 +1,7 @@
 import http.client
 import json
 import os
+from datetime import datetime
 
 from ibm_watson_machine_learning.metanames import GenTextParamsMetaNames as GenParams
 from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
@@ -69,9 +70,14 @@ def get_weather_forecast(city: str):
 
         stripped_list = _summarise(data)
 
+        # Get today's date for the LLM context
+        today_date = datetime.now().strftime("%Y-%m-%d")
+
         prompt = f'''
         Please use the weather forcast data and summarize this day by day.
         There will be multiple weather weather data across next 5 days. Your job is to summarize each day weather. 
+        
+        Today's date: {today_date}
         
         [FORECAST]
         {stripped_list}
@@ -116,7 +122,7 @@ def _get_inference(prompt: str):
         model_id="ibm/granite-3-3-8b-instruct",
         url="https://us-south.ml.cloud.ibm.com",
         project_id="bb2a1719-9aa6-497c-a167-8389bde3c92e",
-        params={GenParams.MAX_NEW_TOKENS: 5000},
+        params={GenParams.MAX_NEW_TOKENS: 500},
     )
 
     response = llm.invoke(prompt)

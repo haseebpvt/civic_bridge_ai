@@ -14,7 +14,8 @@ instructions: >
   Based on the query type, you need to follow the respective steps from below information.
   
   query_type: "infrastructure_issue"
-  1. Get weather forecast of the location using 'weather_agent'
+  1. Get weather forecast of the location using 'weather_agent'. You should be passing the original user query to the
+     'weather_agent' so that 'weather_agent' can decide on how to get the forcasting data.
   2. Pass the weather forecast to 'work_order_agent' to create detailed work order.
   
   query_type: "information_request"

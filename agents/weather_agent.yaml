@@ -2,29 +2,36 @@ spec_version: v1
 kind: native
 name: weather_agent
 llm: watsonx/ibm/granite-3-3-8b-instruct
-style: react
+style: default
 description: >
-  An agent that takes a place name and provides current weather summaries and
-  multi-day forecasts.
+  An agent that takes the location from the users query and pass it to 'weather_forecast_tool'
+  to get the forcast of upcoming five days.
+
+#  An agent that takes a place name and provides current weather summaries and
+#  multi-day forecasts.
 
 instructions: >
-  Use the ReAct pattern to determine and execute a sequence of tool calls.
-  ALWAYS pause after each tool call before deciding on the next step.
+  When a query is received, pass the location from the query to 'weather_forecast_tool'
+  to get the upcoming five days weather forecast. The final response will be five bullet points representing
+  next five days each describing the weather of that particular day.
 
-  - If the user asks for **current weather**, follow these steps *exactly*:
-    1. Call `get_current_weather_tool` with the city name.
-    2. PAUSE.
-    3. Pass the **same** JSON output to `weather_summarizer_tool`.
-    4. PAUSE.
-
-  - If the user asks for a **multi-day weather forecast**, follow these steps *exactly*:
-    1. Call `weather_forecast_tool` with the city name to the the weather forcast.
-    2. Use this weather forcast to answer users question. 
-
-  Once *all* necessary tool calls are complete, synthesize a single,
-  human-readable response that includes both summary and forecast.
+#  Use the ReAct pattern to determine and execute a sequence of tool calls.
+#  ALWAYS pause after each tool call before deciding on the next step.
+#
+#  - If the user asks for **current weather**, follow these steps *exactly*:
+#    1. Call `get_current_weather_tool` with the city name.
+#    2. PAUSE.
+#    3. Pass the **same** JSON output to `weather_summarizer_tool`.
+#    4. PAUSE.
+#
+#  - If the user asks for a **multi-day weather forecast**, follow these steps *exactly*:
+#    1. Call `weather_forecast_tool` with the city name to the the weather forcast.
+#    2. Use this weather forcast to answer users question.
+#
+#  Once *all* necessary tool calls are complete, synthesize a single,
+#  human-readable response that includes both summary and forecast.
 
 tools:
-  - get_current_weather_tool
-  - weather_summarizer_tool
+#  - get_current_weather_tool
+#  - weather_summarizer_tool
   - weather_forecast_tool
