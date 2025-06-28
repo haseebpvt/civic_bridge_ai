@@ -2,49 +2,27 @@ spec_version: v1
 kind: native
 name: planning_agent
 llm: watsonx/ibm/granite-3-3-8b-instruct
-style: planner
-structured_output:
-  type: object
-  additionalProperties: false
-  required:
-    - query_type
-    - query
-  properties:
-    query_type:
-      type: string
-      enum:
-        - infrastructure_issue
-        - information_request
-        - casual_conversation
-    query:
-      type: string
+style: react
 description: >
-  A high-level planner agent that receives transcribed user input from incident reports.
-  It categorizes the input and delegates actionable reports to specialized agents, such
-  as work_order_agent. This agent enables intelligent triage and routing of civic issues
-  like potholes or broken infrastructure for weather-aware scheduling.
+  A high-level agent who understand the users query type using 'query_type_identifier_tool' tool and
+  based on the query type take appropriate action following the instructions.
 instructions: >
-  Use the planner pattern to understand and categorize incoming user input, which originates
-  from transcribed voice notes describing civic issues.
+  First of all use the 'query_type_identifier_tool' to understand the type of users query.
+  
+  The users query WILL be any of these three types: "infrastructure_issue" / "information_request" / "casual_conversation"
+  
+  Based on the query type, you need to follow the respective steps from below information.
+  
+  query_type: "infrastructure_issue"
+  1. Get weather forecast of the location using 'weather_agent'
+  2. Pass the weather forecast to 'work_order_agent' to create detailed work order.
+  
+  query_type: "information_request"
+  1. Just respond with: "I don't have the necessary tools to handle this request at the moment."
+  
+  query_type: "casual_conversation"
+  1. Respond with: "Please let me know if you have any queries or you want to report an issue."
 
-  1. Use `query_type_identifier_tool` to classify the transcription into one of the following types:
-     - "infrastructure_issue" → if the input relates to civic problems such as potholes,
-       broken streetlights, burst pipes, etc.
-     - "information_request" → if the input is a general question that may later be handled
-       by a knowledge base
-     - "casual_conversation" → if the input does not pertain to the platform's scope
-       (e.g., personal chit-chat)
-
-  2. Based on the classification:
-     - If "infrastructure_issue": route the query to `work_order_agent` for issue extraction
-       and weather-aware scheduling.
-     - If "information_request": return a polite message indicating that the system currently
-       handles only civic issue reports.
-     - If "casual_conversation": politely inform the user that the system is intended for
-       reporting public infrastructure problems only.
-
-  This agent is responsible for filtering, triaging, and routing input correctly to prevent
-  inappropriate agent activation.
 collaborators:
   - weather_agent
   - work_order_agent
