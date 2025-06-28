@@ -5,7 +5,7 @@ echo "📦 Packaging & importing tools"
 
 orchestrate tools import \
   -k python \
-  -f tools/router/create_work_order_tool.py \
+  -f tools/router/query_type_identifier_tool.py \
   -p tools/ \
   -r tools/router/requirements.txt
 
