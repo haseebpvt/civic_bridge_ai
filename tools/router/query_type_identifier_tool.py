@@ -17,6 +17,9 @@ class QueryType(BaseModel):
         example="infrastructure_issue"
     )
     query: str = Field(description="Users query as it is")
+    location: str = Field(
+        description="If there is a location specified this field will be populated or else this field will have null value."
+    )
 
 
 @tool(
@@ -44,3 +47,4 @@ def _get_inference(prompt: str):
     result: QueryType = parser.invoke(prompt)
 
     return result.model_dump()
+
