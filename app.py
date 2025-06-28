@@ -7,6 +7,7 @@ from pydub.utils import which
 from twilio.twiml.messaging_response import MessagingResponse
 
 from others.transcribe import transcribe_audio_bytes
+from watson_orchestrate_api import send_to_watson
 
 # Ensure pydub can find your ffmpeg/ffprobe binaries
 AudioSegment.converter = which("ffmpeg")
@@ -43,7 +44,14 @@ async def whatsapp_message(
                 audio_bytes = media_resp.content
 
             transcription = await transcribe_audio_bytes(audio_bytes=audio_bytes)
-            resp.message(f"Transcription: {transcription}")
+            
+            # Send transcription to Watson Orchestrate API
+            watson_response = send_to_watson(transcription)
+            
+            if watson_response:
+                resp.message(f"Transcription: {transcription}\n\nResponse: {watson_response}")
+            else:
+                resp.message(f"Transcription: {transcription}\n\nError: Could not process with Watson Orchestrate")
         elif media_type0.startswith("image"):
             resp.message("Image received")
     else:
