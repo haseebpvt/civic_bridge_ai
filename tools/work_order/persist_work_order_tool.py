@@ -13,7 +13,7 @@ class WorkOrderInfo(BaseModel):
     date: str = Field(description="Date of the work")
     time: str = Field(description="Time of the work")
     title: str = Field(description="Title of the work order")
-    description: str = Field(description="Detailed description of the work")
+    description: str = Field(description="Summarized one sentence description of the work")
     priority: str = Field(description="Priority of the work (High, Medium, Low)")
     status: str = Field(description="Status of the work (open, scheduled, done)")
     pdfUrl: str = Field(description="URL to the PDF document", default="")
