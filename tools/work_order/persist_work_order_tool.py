@@ -24,7 +24,7 @@ class WorkOrderInfo(BaseModel):
     description="Given generated work order, extract the key information from work order and persist in database.",
     permission=ToolPermission.READ_ONLY,
 )
-def persist_work_order_tool(work_order: str):
+def persist_work_order_tool(work_order: str, pdf_url: str = ""):
     # Extract information
     extracted_info = _get_inference(work_order)
 
@@ -36,8 +36,9 @@ def persist_work_order_tool(work_order: str):
         # Generate a unique work order ID in the format wo_YYYYMMDD_XXX
         work_order_id = _generate_work_order_id()
         
-        # Add the generated ID to the extracted info
+        # Add the generated ID and PDF URL to the extracted info
         extracted_info['id'] = work_order_id
+        extracted_info['pdfUrl'] = pdf_url
         
         # Get reference to orders in Firebase Realtime Database
         ref = db.reference('orders')

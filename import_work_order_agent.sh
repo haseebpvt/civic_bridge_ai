@@ -21,6 +21,12 @@ orchestrate tools import \
   -p tools/ \
   -r tools/work_order/requirements.txt
 
+orchestrate tools import \
+  -k python \
+  -f tools/work_order/generate_pdf_tool.py \
+  -p tools/ \
+  -r tools/work_order/requirements.txt
+
 
 echo "✅ Done."
 
