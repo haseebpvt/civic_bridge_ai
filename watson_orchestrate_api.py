@@ -1,7 +1,12 @@
 import http.client
 import json
 import logging
+import os
 from typing import Optional, Dict, Any
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -89,11 +94,22 @@ class WatsonOrchestrateAPI:
                 conn.close()
 
 
-# Default instance with your credentials
-WATSON_BEARER_TOKEN = "eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC02OTgwMDBYQk8yIiwiaWQiOiJJQk1pZC02OTgwMDBYQk8yIiwicmVhbG1pZCI6IklCTWlkIiwianRpIjoiMTExNWM4YTctNGJhNi00M2U3LTk2MjktMjVlODA4NTI2NDEzIiwiaWRlbnRpZmllciI6IjY5ODAwMFhCTzIiLCJnaXZlbl9uYW1lIjoiQWJkdWwiLCJmYW1pbHlfbmFtZSI6Ikhhc2VlYiIsIm5hbWUiOiJBYmR1bCBIYXNlZWIiLCJlbWFpbCI6Imhhc2VlYnB2dEBnbWFpbC5jb20iLCJzdWIiOiJoYXNlZWJwdnRAZ21haWwuY29tIiwiYXV0aG4iOnsic3ViIjoiaGFzZWVicHZ0QGdtYWlsLmNvbSIsImlhbV9pZCI6IklCTWlkLTY5ODAwMFhCTzIiLCJuYW1lIjoiQWJkdWwgSGFzZWViIiwiZ2l2ZW5fbmFtZSI6IkFiZHVsIiwiZmFtaWx5X25hbWUiOiJIYXNlZWIiLCJlbWFpbCI6Imhhc2VlYnB2dEBnbWFpbC5jb20ifSwiYWNjb3VudCI6eyJ2YWxpZCI6dHJ1ZSwiYnNzIjoiMzYyMGI3YTFlOGU4NDZiNzg5YTI1NWIyNGQyZDMwNzQiLCJpbXNfdXNlcl9pZCI6IjEzNzUxMTg5IiwiZnJvemVuIjp0cnVlLCJpbXMiOiIzMDM1MTA3In0sImlhdCI6MTc1MTIwMzc4MCwiZXhwIjoxNzUxMjA3MzgwLCJpc3MiOiJodHRwczovL2lhbS5jbG91ZC5pYm0uY29tL2lkZW50aXR5IiwiZ3JhbnRfdHlwZSI6InVybjppYm06cGFyYW1zOm9hdXRoOmdyYW50LXR5cGU6YXBpa2V5Iiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiZGVmYXVsdCIsImFjciI6MSwiYW1yIjpbInB3ZCJdfQ.BmXjrWDM51uADQXTu9NkkUmaIvgt51y0VnrL6x9IlpPPDhi1Cu8rK5j2-VjKbZ7FdPHyjPcLF3pAdyYJLb0CFHvB0DjlTuGKjQdLTV9EbJE9mvKFZw3tdpMQLep0ID0W89ZpQ2xcy7aj1NMMONfCXYEQHG5Xd-bwX-EPLQz1MJcPhsugVBEBwMeOYpZhDJzeFghZzvAIBhFh1PBZh7OLksIYGmlIIa_EZttXvRzpOqLjU5lVA64kvIHWmNodlLP5AjvdvdGS5cVuAXheoSZYJAqyunz2o895jr0ZYEzi42An9Ep93GQc3HJ2kq-A7AJ1Xs_y_fV1DrzeqKcmEN-tYw"
+# Load credentials from environment variables
+WATSON_BEARER_TOKEN = os.getenv("WATSON_BEARER_TOKEN")
+WATSON_ORCHESTRATE_HOST = os.getenv("WATSON_ORCHESTRATE_HOST", "api.au-syd.watson-orchestrate.cloud.ibm.com")
+WATSON_ORCHESTRATE_INSTANCE_ID = os.getenv("WATSON_ORCHESTRATE_INSTANCE_ID")
+WATSON_ORCHESTRATE_ORCHESTRATION_ID = os.getenv("WATSON_ORCHESTRATE_ORCHESTRATION_ID")
+
+if not WATSON_BEARER_TOKEN:
+    raise ValueError("Watson credentials not found in environment variables. Please check your .env file.")
 
 # Create default instance
-watson_api = WatsonOrchestrateAPI(bearer_token=WATSON_BEARER_TOKEN)
+watson_api = WatsonOrchestrateAPI(
+    bearer_token=WATSON_BEARER_TOKEN,
+    host=WATSON_ORCHESTRATE_HOST,
+    instance_id=WATSON_ORCHESTRATE_INSTANCE_ID,
+    orchestration_id=WATSON_ORCHESTRATE_ORCHESTRATION_ID
+)
 
 
 def send_to_watson(text: str) -> Optional[str]:

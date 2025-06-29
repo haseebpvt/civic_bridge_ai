@@ -6,12 +6,17 @@
 # recordings to the queue, and the websocket client would be sending the
 # recordings to the speech to text service
 
+import os
 from threading import Thread
+from dotenv import load_dotenv
 
 import pyaudio
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import SpeechToTextV1
 from ibm_watson.websocket import RecognizeCallback, AudioSource
+
+# Load environment variables
+load_dotenv()
 
 try:
     from Queue import Queue, Full
@@ -35,13 +40,17 @@ audio_source = AudioSource(q, True, True)
 #### Prepare Speech to Text Service ########
 ###############################################
 
-# initialize speech to text service
-authenticator = IAMAuthenticator(
-    'PXaShdqa7vXgXMyF9wtMGsVKeXGAoSHGG9l5s_MsNuVm',
-)
-speech_to_text = SpeechToTextV1(authenticator=authenticator)
+# Get credentials from environment variables
+IBM_STT_API_KEY = os.getenv("IBM_STT_API_KEY")
+IBM_STT_SERVICE_URL = os.getenv("IBM_STT_SERVICE_URL")
 
-speech_to_text.set_service_url("https://api.au-syd.speech-to-text.watson.cloud.ibm.com/instances/9dc09ef8-be44-4a66-a529-15f13aa79333")
+if not IBM_STT_API_KEY or not IBM_STT_SERVICE_URL:
+    raise ValueError("IBM Speech-to-Text credentials not found in environment variables. Please check your .env file.")
+
+# initialize speech to text service
+authenticator = IAMAuthenticator(IBM_STT_API_KEY)
+speech_to_text = SpeechToTextV1(authenticator=authenticator)
+speech_to_text.set_service_url(IBM_STT_SERVICE_URL)
 
 
 # define callback for the speech to text service

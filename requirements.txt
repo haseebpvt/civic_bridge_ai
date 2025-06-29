@@ -1,0 +1,13 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+python-dotenv==1.0.0
+pydub==0.25.1
+twilio==8.10.0
+httpx==0.25.2
+firebase-admin==6.2.0
+ibm-watsonx-orchestrate==1.5.1
+ibm_watson_machine_learning==1.0.368
+langchain-ibm==0.1.0
+ibm-watson==7.0.1
+ibm-cloud-sdk-core==3.16.7
+pyaudio==0.2.11

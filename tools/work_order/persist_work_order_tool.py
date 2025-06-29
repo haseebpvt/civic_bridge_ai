@@ -3,10 +3,14 @@ import json
 import firebase_admin
 from firebase_admin import credentials, db
 from datetime import datetime
+from dotenv import load_dotenv
 
 from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 from langchain_ibm import ChatWatsonx
 from pydantic import BaseModel, Field
+
+# Load environment variables
+load_dotenv()
 
 
 class WorkOrderInfo(BaseModel):
@@ -62,12 +66,17 @@ def persist_work_order_tool(work_order: str, pdf_url: str = ""):
     
 
 def _get_inference(prompt: str):
-    os.environ["WATSONX_APIKEY"] = "ZA9eEpcQJFUqjvtLAAxbuvWmUgTlbyXWqVVmM3Nq3FwD"
+    # Set Watson AI API key from environment variable
+    watsonx_apikey = os.getenv("WATSONX_APIKEY")
+    if not watsonx_apikey:
+        raise ValueError("WATSONX_APIKEY not found in environment variables. Please check your .env file.")
+    
+    os.environ["WATSONX_APIKEY"] = watsonx_apikey
 
     chat = ChatWatsonx(
         model_id="ibm/granite-3-3-8b-instruct",
-        url="https://us-south.ml.cloud.ibm.com",
-        project_id="bb2a1719-9aa6-497c-a167-8389bde3c92e",
+        url=os.getenv("WATSONX_URL", "https://us-south.ml.cloud.ibm.com"),
+        project_id=os.getenv("WATSONX_PROJECT_ID"),
     )
 
     parser = chat.with_structured_output(schema=WorkOrderInfo)

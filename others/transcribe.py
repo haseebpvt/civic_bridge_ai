@@ -1,13 +1,21 @@
 # others/transcribe.py
 
 import io
+import os
 
 import httpx
 from pydub import AudioSegment
+from dotenv import load_dotenv
 
-# ——— Credentials from your example ———
-API_KEY = "PXaShdqa7vXgXMyF9wtMGsVKeXGAoSHGG9l5s_MsNuVm"
-SERVICE_URL = "https://api.au-syd.speech-to-text.watson.cloud.ibm.com/instances/9dc09ef8-be44-4a66-a529-15f13aa79333"
+# Load environment variables
+load_dotenv()
+
+# ——— Credentials from environment variables ———
+API_KEY = os.getenv("IBM_STT_API_KEY")
+SERVICE_URL = os.getenv("IBM_STT_SERVICE_URL")
+
+if not API_KEY or not SERVICE_URL:
+    raise ValueError("IBM Speech-to-Text credentials not found in environment variables. Please check your .env file.")
 
 # ——— IBM endpoints ———
 _IAM_TOKEN_URL = "https://iam.cloud.ibm.com/identity/token"

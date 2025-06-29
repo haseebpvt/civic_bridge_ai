@@ -1,19 +1,27 @@
+import os
 import httpx
 from fastapi import FastAPI, Form, Response
 from pydub import AudioSegment
 from pydub.utils import which
 from twilio.twiml.messaging_response import MessagingResponse
+from dotenv import load_dotenv
 
 from others.transcribe import transcribe_audio_bytes
 from watson_orchestrate_api import send_to_watson
+
+# Load environment variables
+load_dotenv()
 
 # Ensure pydub can find your ffmpeg/ffprobe binaries
 AudioSegment.converter = which("ffmpeg")
 AudioSegment.ffprobe = which("ffprobe")
 
-# Twilio credentials (hard-coded for now)
-TWILIO_ACCOUNT_SID = "AC03aa6a3de06a799dc0c5bd2fba664184"
-TWILIO_AUTH_TOKEN = "972a5887bf945c2b00147b7fd69daeda"
+# Twilio credentials from environment variables
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+
+if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN:
+    raise ValueError("Twilio credentials not found in environment variables. Please check your .env file.")
 
 app = FastAPI()
 
@@ -41,8 +49,7 @@ async def whatsapp_message(
 
                 audio_bytes = media_resp.content
 
-            # transcription = await transcribe_audio_bytes(audio_bytes=audio_bytes)
-            transcription = "Hello, I'm reporting fallen tree blocking the road in Kakkanad"
+            transcription = await transcribe_audio_bytes(audio_bytes=audio_bytes)
 
             # Send transcription to Watson Orchestrate API
             watson_response = send_to_watson(transcription)
