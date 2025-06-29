@@ -15,7 +15,8 @@ instructions: >
   - If `query_type` == "infrastructure_issue":
       1. Call `weather_agent` (collaborator) with the extracted `location` to obtain a concise five-day weather forecast. **PAUSE**.
       2. Call `work_order_agent` (collaborator) with the original user query **and** the weather forecast returned by `weather_agent` so it can generate a detailed work order. **PAUSE**.
-      3. When the `work_order_agent` returns the final work order, present that work order to the user as the final response (no additional commentary).
+      3. Call `persist_work_order_tool` with the generated work order to save it to the Firebase database. **PAUSE**.
+      4. When the work order is successfully persisted, present the work order to the user along with the persistence confirmation (including order ID) as the final response.
   - If `query_type` == "information_request":
       Respond with exactly: "I don't have the necessary tools to handle this request at the moment."
   - If `query_type` == "casual_conversation":
@@ -29,3 +30,4 @@ collaborators:
 tools:
   - query_type_identifier_tool
   - weather_forecast_tool
+  - persist_work_order_tool
