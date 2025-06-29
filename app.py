@@ -1,5 +1,3 @@
-import io
-
 import httpx
 from fastapi import FastAPI, Form, Response
 from pydub import AudioSegment
@@ -43,11 +41,12 @@ async def whatsapp_message(
 
                 audio_bytes = media_resp.content
 
-            transcription = await transcribe_audio_bytes(audio_bytes=audio_bytes)
-            
+            # transcription = await transcribe_audio_bytes(audio_bytes=audio_bytes)
+            transcription = "Hello, I'm reporting fallen tree blocking the road in Kakkanad"
+
             # Send transcription to Watson Orchestrate API
             watson_response = send_to_watson(transcription)
-            
+
             if watson_response:
                 resp.message(f"Transcription: {transcription}\n\nResponse: {watson_response}")
             else:
@@ -55,6 +54,12 @@ async def whatsapp_message(
         elif media_type0.startswith("image"):
             resp.message("Image received")
     else:
-        resp.message(f"The text is: {incoming_text}")
+        resp.message(f"Welcome to CivicBridge AI! If you have any questions or encounter any issues, feel free to let me know.")
 
     return Response(content=str(resp), media_type="application/xml")
+
+
+if __name__ == '__main__':
+    import uvicorn
+
+    uvicorn.run("app:app", host="localhost", port=8000)
