@@ -1,4 +1,5 @@
 import os
+import json
 import firebase_admin
 from firebase_admin import credentials, db
 from datetime import datetime
@@ -76,25 +77,68 @@ def _get_inference(prompt: str):
 
 
 def _initialize_firebase():
-    """Initialize Firebase Admin SDK if not already initialized"""
+    """Initialize Firebase Admin SDK if not already initialized
+    
+    This function handles multiple authentication scenarios:
+    1. Local Service Account File - Uses the bundled service account key file
+    2. Service Account Key Content (JSON string in environment variable) - Best for cloud deployment
+    3. Service Account Key File Path - Good for local development with custom key files  
+    4. Application Default Credentials - Good for local development with gcloud auth
+    """
     if not firebase_admin._apps:
-        # You can initialize with default credentials or specify a service account key
-        # Option 1: Use default credentials (if running on Google Cloud or with GOOGLE_APPLICATION_CREDENTIALS env var)
+        database_url = os.environ.get('FIREBASE_DATABASE_URL', 'https://test-d9354.firebaseio.com')
+        
+        # Option 1: Local Service Account File (bundled with the code)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        local_service_account_path = os.path.join(current_dir, 'test-d9354-firebase-adminsdk-81jqs-4159a720ab.json')
+        if os.path.exists(local_service_account_path):
+            try:
+                cred = credentials.Certificate(local_service_account_path)
+                firebase_admin.initialize_app(cred, {'databaseURL': database_url})
+                print("Firebase initialized with local service account file")
+                return
+            except Exception as e:
+                print(f"Failed to initialize Firebase with local service account file: {e}")
+        
+        # Option 2: Service Account Key Content (JSON string) - RECOMMENDED for cloud deployment
+        service_account_content = os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON')
+        if service_account_content:
+            try:
+                service_account_info = json.loads(service_account_content)
+                cred = credentials.Certificate(service_account_info)
+                firebase_admin.initialize_app(cred, {'databaseURL': database_url})
+                print("Firebase initialized with service account key content")
+                return
+            except (json.JSONDecodeError, Exception) as e:
+                print(f"Failed to initialize Firebase with service account content: {e}")
+        
+        # Option 3: Service Account Key File Path  
+        service_account_key_path = os.environ.get('FIREBASE_SERVICE_ACCOUNT_KEY_PATH')
+        if service_account_key_path and os.path.exists(service_account_key_path):
+            try:
+                cred = credentials.Certificate(service_account_key_path)
+                firebase_admin.initialize_app(cred, {'databaseURL': database_url})
+                print("Firebase initialized with service account key file")
+                return
+            except Exception as e:
+                print(f"Failed to initialize Firebase with service account file: {e}")
+        
+        # Option 4: Application Default Credentials (for local development)
         try:
             cred = credentials.ApplicationDefault()
-            firebase_admin.initialize_app(cred, {
-                'databaseURL': os.environ.get('FIREBASE_DATABASE_URL', 'https://test-d9354.firebaseio.com')
-            })
-        except Exception:
-            # Option 2: Use service account key file (you need to set the path)
-            service_account_key_path = os.environ.get('FIREBASE_SERVICE_ACCOUNT_KEY', 'path/to/serviceAccountKey.json')
-            if os.path.exists(service_account_key_path):
-                cred = credentials.Certificate(service_account_key_path)
-                firebase_admin.initialize_app(cred, {
-                    'databaseURL': os.environ.get('FIREBASE_DATABASE_URL', 'https://test-d9354.firebaseio.com')
-                })
-            else:
-                raise Exception("Firebase credentials not found. Please set GOOGLE_APPLICATION_CREDENTIALS environment variable or provide FIREBASE_SERVICE_ACCOUNT_KEY path.")
+            firebase_admin.initialize_app(cred, {'databaseURL': database_url})
+            print("Firebase initialized with Application Default Credentials") 
+            return
+        except Exception as e:
+            print(f"Failed to initialize Firebase with Application Default Credentials: {e}")
+        
+        # If all methods fail, raise an informative error
+        raise Exception(
+            "Firebase credentials not found. Please ensure the service account file exists in the tools/work_order directory, "
+            "or set FIREBASE_SERVICE_ACCOUNT_JSON environment variable for cloud deployment, "
+            "or run 'gcloud auth application-default login' for local development. "
+            f"Database URL: {database_url}"
+        )
 
 
 def _generate_work_order_id():

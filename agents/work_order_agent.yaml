@@ -17,7 +17,8 @@ instructions: >
      - `issue_description`
      - `weather_details`
      **PAUSE**.
-  4. Return the generated work order as the final answer (no additional commentary).
+  4. Call `persist_work_order_tool` with the generated work order to save it to the Firebase database. **PAUSE**.
+  5. Return the generated work order along with the persistence confirmation (including the assigned order ID) as the final answer.
   
   Prioritize worker safety and work effectiveness when making scheduling recommendations.
   Avoid scheduling outdoor electrical work during rain or storms.
@@ -27,3 +28,4 @@ collaborators:
 tools:
   - extract_details_from_issue_tool
   - work_order_creation_tool
+  - persist_work_order_tool
